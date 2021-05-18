@@ -1,10 +1,8 @@
-import kwargs as kwargs
-import view as view
+
 from django.views import View
 
 from article.models import ArticleUser, CommentUser
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import (
     ListView,
@@ -61,10 +59,9 @@ class IndexView(ListView):
         context['search_form'] = self.form
         user = self.request.user
         article_filter = []
-        for article in ArticleUser.object.filter(user=user):
+        for article in ArticleUser.objects.filter(user=user):
             article_filter.append(article.article.pk)
-        context['article_like'] = article
-
+        context['article_like'] = article_filter
 
         if self.search_data:
             context['query'] = urlencode({'search_value': self.search_data})
@@ -80,13 +77,13 @@ class ArticleView(DetailView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         article_filter = []
-        for article in ArticleUser.object.filter(user=user):
+        for article in ArticleUser.objects.filter(user=user):
             article_filter.append(article.article.pk)
-        context['article_like'] = article
+        context['article_like'] = article_filter
         comment_filter = []
-        for comment in CommentUser.object.filter(user=user):
+        for comment in CommentUser.objects.filter(user=user):
             comment_filter.append(comment.comment.pk)
-        context['comment_like'] = comment
+        context['comment_like'] = comment_filter
         return context
 
 
@@ -130,7 +127,7 @@ class ArticleDeleteView(PermissionRequiredMixin, DeleteView):
     permission_required = 'article.delete_article'
 
 
-class Article_like(View):
+class Articlelike(View):
 
     def get(self, request, *args, **kwargs):
         article = get_object_or_404(Article, pk=self.kwargs.get('pk'))

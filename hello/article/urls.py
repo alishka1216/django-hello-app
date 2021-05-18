@@ -28,5 +28,5 @@ urlpatterns = [
     path('<int:pk>/Articlelike/', ArticleLike.as_view(), name='article_like'),
     path('<int:pk>/Articleunlike/', ArticleUnlike.as_view(), name='article_unlike'),
     path('<int:pk>/Commentlike/', CommentLike.as_view(), name='comment_like'),
-    path('<int:pk>/Commentunlike/', CommentUnlike.as_view(), name='comment_like')
+    path('<int:pk>/Commentunlike/', CommentUnlike.as_view(), name='comment_unlike')
 ]
