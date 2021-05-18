@@ -1,6 +1,11 @@
+import kwargs as kwargs
+import view as view
+from django.views import View
+
+from article.models import ArticleUser, CommentUser
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import (
     ListView,
     CreateView,
@@ -54,6 +59,12 @@ class IndexView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_form'] = self.form
+        user = self.request.user
+        article_filter = []
+        for article in ArticleUser.object.filter(user=user):
+            article_filter.append(article.article.pk)
+        context['article_like'] = article
+
 
         if self.search_data:
             context['query'] = urlencode({'search_value': self.search_data})
@@ -64,6 +75,19 @@ class IndexView(ListView):
 class ArticleView(DetailView):
     model = Article
     template_name = 'articles/view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        article_filter = []
+        for article in ArticleUser.object.filter(user=user):
+            article_filter.append(article.article.pk)
+        context['article_like'] = article
+        comment_filter = []
+        for comment in CommentUser.object.filter(user=user):
+            comment_filter.append(comment.comment.pk)
+        context['comment_like'] = comment
+        return context
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
@@ -105,3 +129,16 @@ class ArticleDeleteView(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('article:list')
     permission_required = 'article.delete_article'
 
+
+class Article_like(View):
+
+    def get(self, request, *args, **kwargs):
+        article = get_object_or_404(Article, pk=self.kwargs.get('pk'))
+        user = request.user
+        try:
+            ArticleUser.objects.get(article=article, user=user)
+
+        except ArticleUser.DoesNotExist:
+            ArticleUser.objects.create(article=article, user=user)
+
+        return redirect('article:view', article.pk)

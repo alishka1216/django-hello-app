@@ -12,6 +12,30 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class ArticleUser(BaseModel):
+    article = models.ForeignKey("article.Article", on_delete=models.CASCADE, related_name='UserArticle')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='UserArticle')
+
+    class Meta:
+        verbose_name = 'Оценка(статья)'
+        verbose_name_plural = 'Оценки(статья)'
+
+    def __str__(self):
+        return "{}. {}".format(self.article, self.user)
+
+
+class CommentUser(BaseModel):
+    comment = models.ForeignKey("article.Comment", on_delete=models.CASCADE, related_name="UserComment")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="UserComment")
+
+    class Meta:
+        verbose_name = 'Оценка(коммент)'
+        verbose_name_plural = 'Оценки(коммент)'
+
+    def __str__(self):
+        return "{}. {}".format(self.comment, self.user)
+
+
 class Article(BaseModel):
     title = models.CharField(
         max_length=120,

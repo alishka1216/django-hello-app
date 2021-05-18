@@ -1,3 +1,4 @@
+import view as view
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import CreateView
 from django.shortcuts import reverse, get_object_or_404
@@ -26,3 +27,5 @@ class ArticleCommentCreate(PermissionRequiredMixin, CreateView):
         comment.author = self.request.user
 
         return super().form_valid(form)
+
+
