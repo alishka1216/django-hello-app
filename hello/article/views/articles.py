@@ -1,4 +1,4 @@
-
+from django.http import HttpResponse, HttpResponseForbidden
 from django.views import View
 
 from article.models import ArticleUser, CommentUser
@@ -59,8 +59,9 @@ class IndexView(ListView):
         context['search_form'] = self.form
         user = self.request.user
         article_filter = []
-        for article in ArticleUser.objects.filter(user=user):
-            article_filter.append(article.article.pk)
+        if user.is_authenticated:
+            for article in ArticleUser.objects.filter(user=user):
+                article_filter.append(article.article.pk)
         context['article_like'] = article_filter
 
         if self.search_data:
@@ -77,14 +78,15 @@ class ArticleView(DetailView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         article_filter = []
-        for article in ArticleUser.objects.filter(user=user):
-            article_filter.append(article.article.pk)
-        context['article_like'] = article_filter
-        comment_filter = []
-        for comment in CommentUser.objects.filter(user=user):
-            comment_filter.append(comment.comment.pk)
-        context['comment_like'] = comment_filter
-        return context
+        if user.is_authenticated:
+            for article in ArticleUser.objects.filter(user=user):
+                article_filter.append(article.article.pk)
+            context['article_like'] = article_filter
+            comment_filter = []
+            for comment in CommentUser.objects.filter(user=user):
+                comment_filter.append(comment.comment.pk)
+            context['comment_like'] = comment_filter
+            return context
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
@@ -127,15 +129,15 @@ class ArticleDeleteView(PermissionRequiredMixin, DeleteView):
     permission_required = 'article.delete_article'
 
 
-class Articlelike(View):
-
-    def get(self, request, *args, **kwargs):
-        article = get_object_or_404(Article, pk=self.kwargs.get('pk'))
-        user = request.user
-        try:
-            ArticleUser.objects.get(article=article, user=user)
-
-        except ArticleUser.DoesNotExist:
-            ArticleUser.objects.create(article=article, user=user)
-
-        return redirect('article:view', article.pk)
+# class Articlelike(View):
+#
+#     def get(self, request, *args, **kwargs):
+#         article = get_object_or_404(Article, pk=self.kwargs.get('pk'))
+#         user = request.user
+#         try:
+#             ArticleUser.objects.get(article=article, user=user)
+#             return HttpResponseForbidden('dvgd')
+#         except ArticleUser.DoesNotExist:
+#             ArticleUser.objects.create(article=article, user=user)
+#             return HttpResponse(article.UserArticle.count())
+#         # return redirect('article:view', article.pk)

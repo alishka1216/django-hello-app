@@ -13,11 +13,10 @@ class ArticleLike(View):
         user = request.user
         try:
             ArticleUser.objects.get(article=article, user=user)
-            return HttpResponseForbidden('jjjj')
+            return HttpResponseForbidden('ошибка')
         except ArticleUser.DoesNotExist:
             ArticleUser.objects.create(article=article, user=user)
             return HttpResponse(article.UserArticle.count())
-
 
 
 class ArticleUnlike(View):
@@ -27,9 +26,9 @@ class ArticleUnlike(View):
         try:
             like = ArticleUser.objects.get(article=article, user=user)
             like.delete()
+            return HttpResponse(article.UserArticle.count())
         except ArticleUser.DoesNotExist:
-            pass
-        return redirect('article:view', article.pk)
+            return HttpResponseForbidden('ошибка')
 
 
 class CommentLike(View):
@@ -38,10 +37,10 @@ class CommentLike(View):
         user = request.user
         try:
             CommentUser.objects.get(comment=comment, user=user)
+            return HttpResponseForbidden('ошибка')
         except CommentUser.DoesNotExist:
             CommentUser.objects.create(comment=comment, user=user)
-
-        return redirect('article:view', comment.article.pk)
+            return HttpResponse(comment.CommentUser.count())
 
 
 class CommentUnlike(View):

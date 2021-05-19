@@ -11,16 +11,40 @@ async function makeRequest(url, method='GET') {
 
 async function articleLike (event) {
     event.preventDefault();
-    let a = event.currentTarget
-    console.log(a)
-    let b = a.href
-    console.log(b)
 
-    try {
+    let a = event.currentTarget //достаём aшку из лайка
+    console.log(a)
+    let b = a.href //достаем ссылку
+    console.log(b)
+    try{
         let result = await makeRequest(b)
-        console.log(result)
-        currentTarget.innerHTML = '<i class="fas fa-thumbs-up"></i>'
-        currentTarget
+        console.log(a.innerHTML)
+        a.innerHTML = '<i class="fas fa-thumbs-up"></i>'
+        a.setAttribute('href', b.replace('Articlelike', 'Articleunlike'))
+        a.onclick = unlikeArticle
+        let id = a.dataset.articlecounter
+        let counter = document.getElementById(id)
+        counter.innerText = result
+    }
+    catch (error){
+        console.log(error)
     }
 }
 
+async function unlikeArticle(event){
+    event.preventDefault();
+    let a = event.currentTarget
+    let b = a.href
+    try {
+        let result = await makeRequest(b)
+        a.innerHTML = '<i class="far fa-thumbs-up"></i>'
+        a.setAttribute('href', b.replace('Articleunlike', 'Articlelike'))
+        a.onclick = articleLike
+        let id = a.dataset.articlecounter
+        let counter = document.getElementById(id)
+        counter.innerText = result
+    }
+        catch (error){
+        console.log(error)
+    }
+}

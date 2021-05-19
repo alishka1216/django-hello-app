@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.core.validators import MinLengthValidator
-from django.conf import settings
 
 
 class BaseModel(models.Model):
