@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # Custom apps
     'article',
     'accounts',
+    'api_vi',
 
     # Lib apps
 ]
