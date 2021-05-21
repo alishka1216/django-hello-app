@@ -1,5 +1,5 @@
 from django.urls import path, include
-from api_vi.views import add, subtract,get_csrf_token_view, multiply, devide
+from api_vi.views import add, subtract, get_csrf_token_view, multiply, devide
 
 app_name = 'api_vi'
 

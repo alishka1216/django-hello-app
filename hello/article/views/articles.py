@@ -3,7 +3,7 @@ from django.views import View
 
 from article.models import ArticleUser, CommentUser
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.views.generic import (
     ListView,
     CreateView,
@@ -141,3 +141,6 @@ class ArticleDeleteView(PermissionRequiredMixin, DeleteView):
 #             ArticleUser.objects.create(article=article, user=user)
 #             return HttpResponse(article.UserArticle.count())
 #         # return redirect('article:view', article.pk)
+
+def getIndex(request):
+    return render(request, 'index.html')

@@ -28,5 +28,6 @@ urlpatterns = [
     path('articles/', include('article.urls')),
     path('accounts/', include('accounts.urls')),
     path('api_vi/', include('api_vi.urls')),
+    path('api_vi2/', include('api_vi2.urls')),
     path('', RedirectView.as_view(url=HOMEPAGE_URL, permanent=True)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

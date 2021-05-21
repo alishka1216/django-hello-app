@@ -4,6 +4,7 @@ from article.views.articles import (
     CreateArticleView,
     ArticleUpdateView,
     ArticleDeleteView,
+    getIndex
 )
 from article.views.like import (
     ArticleLike,

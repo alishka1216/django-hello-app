@@ -1,0 +1,1 @@
+from api_vi2.serializers.article import ArticleSerializer

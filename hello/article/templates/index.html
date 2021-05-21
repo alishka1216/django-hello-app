@@ -5,18 +5,20 @@
     <title>Title</title>
 </head>
 <body>
-<input id="A" type="A"> <input id="B" type="B">
+<input id="A" type="A">
+<input id="B" type="B">
 <div id="container0">
-    <input id="{% url 'api_vi:add' %}" type="button" value="add">
+    {{ 'fdgdgdgdgd' }}
+    <input onclick="onClick(event)" data-url="{% url 'api_vi:add' %}" type="button" value="add">
 </div>
 <div id="container1">
-    <input id="add-item-btn1" type="button" value="subtract">
+    <input onclick="onClick(event)" data-url="{% url 'api_vi:subtract' %}" type="button" value="subtract">
 </div>
 <div id="container2">
-    <input id="add-item-btn2" type="button" value="multiply">
+    <input onclick="onClick(event)" data-url="{% url 'api_vi:multiply' %}"type="button" value="multiply">
 </div>
 <div id="container3">
-    <input id="add-item-btn3" type="button" value="divide">
+    <input onclick="onClick(event)" data-url="{% url 'api_vi:devide' %}" type="button" value="divide">
 </div>
 <p id="result"></p>
 </body>
@@ -53,29 +55,26 @@
 }
 async function onClick(event) {
     event.preventDefault();
-    let url = event.target.id
+    let url = event.target.dataset.url
+    console.log(url);
     let a = document.getElementById('A').value
     let b = document.getElementById('B').value
-    let data_a = {"A": a}
-    let data_b = {"B": b}
-   try {
-       let data = await makeRequest(url, JSON.stringify(data_b, data_a));
-       console.log(data_a)
-       let div = document.createElement('div')
-       let open = document.getElementById('api_vi:add')
-       open.onclick = action
-       action()
-       let container = document.getElementById('container')
+    let datas = {"A": a, "B":b}
 
-           container.appendChild(div)
-       }
+   try {
+       let data = await makeRequest(url,"POST", JSON.stringify(datas));
+       console.log(data)
+
+}
    catch (error) {
        console.log(error);
    }
 }
-window.addEventListener('load', onClick)
 
+async function getToken(){
+    await makeRequest('http://localhost:8000/api_vi/get_csrf_token_view/')
+}
+
+window.addEventListener('load', getToken)
 
 </script>
-
-{#mB4Vfk2ozcNFLzhxvODHopRw7UvDXbNq46a6TRIb5MXvoiyUVuefuqk1sfUYeCCh#}
