@@ -17,7 +17,7 @@ def add(request):
     if request.body:
         try:
             response_context = json.loads(request.body)
-            answer = response_context['A'] + response_context['B']
+            answer = int(response_context['A']) + int(response_context['B'])
             response_body = {
                 'answer' : answer
             }
@@ -37,9 +37,9 @@ def subtract(request):
     if request.body:
         try:
             response_context = json.loads(request.body)
-            answer = response_context['A'] - response_context['B']
+            answer = int(response_context['A']) - int(response_context['B'])
             response_body = {
-                'answer' : answer
+                'answer' : int(answer)
             }
             response = HttpResponse(json.dumps(response_body))
             response['content-type'] = 'application/json'
@@ -57,7 +57,7 @@ def multiply(request):
     if request.body:
         try:
             response_context = json.loads(request.body)
-            answer = response_context['A'] * response_context['B']
+            answer = int(response_context['A']) * int(response_context['B'])
             response_body = {
                 'answer' : answer
             }
@@ -77,7 +77,7 @@ def devide(request):
     if request.body:
         try:
             response_context = json.loads(request.body)
-            answer = response_context['A'] - response_context['B']
+            answer = int(response_context['A']) / int(response_context['B'])
             response_body = {
                 'answer' : answer
             }
