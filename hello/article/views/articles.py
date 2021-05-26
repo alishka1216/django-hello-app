@@ -73,6 +73,7 @@ class IndexView(ListView):
 class ArticleView(DetailView):
     model = Article
     template_name = 'articles/view.html'
+    context_object_name = "article"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -86,7 +87,7 @@ class ArticleView(DetailView):
             for comment in CommentUser.objects.filter(user=user):
                 comment_filter.append(comment.comment.pk)
             context['comment_like'] = comment_filter
-            return context
+        return context
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):

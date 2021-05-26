@@ -7,7 +7,6 @@ from article.models import Article, ArticleUser, Comment, CommentUser
 
 
 class ArticleLike(View):
-
     def get(self, request, *args, **kwargs):
         article = get_object_or_404(Article, pk=self.kwargs.get('pk'))
         user = request.user
@@ -40,7 +39,7 @@ class CommentLike(View):
             return HttpResponseForbidden('ошибка')
         except CommentUser.DoesNotExist:
             CommentUser.objects.create(comment=comment, user=user)
-            return HttpResponse(comment.CommentUser.count())
+            return HttpResponse(comment.UserComment.count())
 
 
 class CommentUnlike(View):
@@ -50,7 +49,7 @@ class CommentUnlike(View):
         try:
             like = CommentUser.objects.get(comment=comment, user=user)
             like.delete()
+            return HttpResponse(comment.UserComment.count())
         except CommentUser.DoesNotExist:
-            pass
-
-        return redirect('article:view', comment.article.pk)
+            return HttpResponseForbidden('ошибка')
+        # return redirect('article:view', comment.article.pk)
